@@ -15,7 +15,7 @@ import javax.persistence.Id;
 @NoArgsConstructor
 @Entity
 @Builder
-public class Nota {
+public class NotaDominio {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

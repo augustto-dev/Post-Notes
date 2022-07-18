@@ -5,5 +5,7 @@ Fontes:
 https://fonts.google.com/specimen/League+Spartan
 https://fonts.google.com/specimen/Inter
 	
-Paleta:
+Paletas:
 https://colorhunt.co/palette/f6e3c5a0d9956cc4a14cacbc
+https://colorhunt.co/palette/6fb2d285c88aebd671eeeeee
+https://colorhunt.co/palette/f9f2ed3ab0ffffb562f87474

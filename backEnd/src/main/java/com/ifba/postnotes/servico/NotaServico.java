@@ -1,11 +1,11 @@
 package com.ifba.postnotes.servico;
 
-import com.ifba.postnotes.dominio.Nota;
+import com.ifba.postnotes.dominio.NotaDominio;
+import com.ifba.postnotes.mapeamento.NotaMapeamento;
 import com.ifba.postnotes.repositorio.NotaRepositorio;
-import com.ifba.postnotes.solicitacoes.NotaAlterar;
-import com.ifba.postnotes.solicitacoes.NotaSalvar;
+import com.ifba.postnotes.solicitacoes.NotaAlteracao;
+import com.ifba.postnotes.solicitacoes.NotaSalvamento;
 import lombok.RequiredArgsConstructor;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -15,30 +15,32 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class NotaServico {
-    private final NotaRepositorio notaRepositorio;
+    private final NotaRepositorio notaRepositorioVar;
 
-    public List<Nota> listAll() {
-        return notaRepositorio.findAll();
+    public List<NotaDominio> listAll() {
+        return notaRepositorioVar.findAll();
     }
 
-    public Nota findByIdOrThrowBadRequestException(Long id) {
-        return notaRepositorio.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Não foi encontrado o id do cartão"));
+    public List<NotaDominio> findByTitulo(String titulo) {
+        return notaRepositorioVar.findByTitulo(titulo);
     }
 
-    public Nota save(@NotNull NotaSalvar notaSalvar) {
-        Nota notaListItem = Nota.builder().titulo(notaSalvar.getTitulo()).build();
-        return notaRepositorio.save(notaListItem);
+    public NotaDominio findByIdOrThrowBadRequestException(Long id) {
+        return notaRepositorioVar.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Não foi encontrado o id da nota"));
+    }
+
+    public NotaDominio save(NotaSalvamento notaSalvamentoVar) {
+        return notaRepositorioVar.save(NotaMapeamento.INSTANCE.toNota(notaSalvamentoVar));
+    }
+
+    public void replace(NotaAlteracao notaAlteracaoVar) {
+        NotaDominio notaDominioSalva = findByIdOrThrowBadRequestException(notaAlteracaoVar.getId());
+        NotaDominio notaDominioAlterada = NotaMapeamento.INSTANCE.toNota(notaAlteracaoVar);
+        notaDominioAlterada.setId(notaDominioSalva.getId());
+        notaRepositorioVar.save(notaDominioAlterada);
     }
 
     public void delete(Long id) {
-        notaRepositorio.delete(findByIdOrThrowBadRequestException(id));
-    }
-
-    public void replace(@NotNull NotaAlterar notaAlterar) {
-        Nota notaSalva = findByIdOrThrowBadRequestException(notaAlterar.getId());
-        Nota notaListItem = Nota.builder()
-                .id(notaSalva.getId())
-                .titulo(notaAlterar.getTitulo()).build();
-        notaRepositorio.save(notaListItem);
+        notaRepositorioVar.delete(findByIdOrThrowBadRequestException(id));
     }
 }
