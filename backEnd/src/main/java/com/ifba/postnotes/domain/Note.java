@@ -1,4 +1,4 @@
-package com.ifba.postnotes.dominio;
+package com.ifba.postnotes.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,12 +15,12 @@ import javax.persistence.Id;
 @NoArgsConstructor
 @Entity
 @Builder
-public class NotaDominio {
+public class Note {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String titulo;
-    private String texto;
-    private String imagem;
-    private String cor;
+    private String title;
+    private String text;
+    private String image;
+    private String color;
 }
